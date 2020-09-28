@@ -1,0 +1,94 @@
+schema {
+  mutation: Mutation
+  query: Query
+}
+
+directive @auth on OBJECT
+
+type Query {
+  person(id: ID!): Person
+  event(id: ID!): Event
+}
+
+type Mutation {
+    "If id is passed it's assumed that object is updated, if id is not passed a new object is created!"
+    person(person: PersonInput!): Person
+    event(event: EventInput!): Event
+
+    attendance(status: AttendanceStatus!): Attendance
+}
+
+input EventInput{
+    id: ID
+    name: String!
+    time: DateTime!
+    type: EventType!
+}
+
+input PersonInput{
+    id: ID
+    name: String
+    personalNumber: String
+    email: Email
+    phone: Phone
+    isVerified: Boolean
+    voiceType: VoiceType 
+}
+
+input AttendanceInput{
+    id: ID
+    personId: ID
+    eventId: ID
+    status: AttendanceStatus
+}
+
+type Person {
+    id: ID!
+    name: String!
+    personalNumber: String
+    email: Email!
+    phone: Phone
+    isVerified: Boolean
+    voiceType: VoiceType
+    attendances(type: AttendanceStatus): [Attendance!]!
+}
+
+type Event {
+    id: ID!
+    name: String!
+    time: DateTime!
+    type: EventType!
+    attendances(type: AttendanceStatus): [Attendance!]!
+}
+
+type Attendance {
+    id: ID!
+    person: Person!
+    event: Event!
+    status: AttendanceStatus!
+}
+enum EventType {
+    REHERSAL
+    ADDITIONAL_REHERSAL
+    CONCERT
+}
+enum VoiceType {
+    SOPRANO_1S
+    SOPRANO_2
+    ALTO_1
+    ALTO_2
+    TENOR_1
+    TENOR_2
+    BARITONE
+    BASS
+}
+enum AttendanceStatus {
+    UNKNOWN
+    ACCEPTED
+    DECLINED
+    PRESENT
+    NOT_PRESENT
+}
+scalar DateTime
+scalar Email
+scalar Phone
