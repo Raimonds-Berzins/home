@@ -42,7 +42,7 @@ public class HttpService {
 
             if (HttpMethod.get(request.requestMethod()).equals(HttpMethod.put)) {
                 String etag = request.headers("If-Match");
-                if (etag == null || etag.isBlank())
+                if (etag == null || etag.trim().isEmpty())
                     service.halt(403, "\"If-Match\" header not present");
             }
         });
